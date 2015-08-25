@@ -24,7 +24,7 @@ func (*chat_server) Chat(stream pb.Chat_ChatServer) error {
 		in, err := stream.Recv()
 		// end of the streaming
 		if err == io.EOF {
-			grpclog.Println("finished stream")
+			grpclog.Println("server -- finished stream")
 			return nil
 		}
 		if err != nil {
@@ -32,7 +32,7 @@ func (*chat_server) Chat(stream pb.Chat_ChatServer) error {
 			return err
 		}
 		content := in.Content
-		grpclog.Println("received message: " + content)
+		grpclog.Printf("server -- received message:\n%v", content)
 		revMsg := "received"
 		stream.Send(&pb.Msg{Content: revMsg})
 	}

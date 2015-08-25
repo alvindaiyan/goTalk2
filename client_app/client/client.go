@@ -2,7 +2,6 @@ package client
 
 import (
 	"io"
-	"time"
 
 	pb "github.com/goTalk2/proto/client_proto"
 
@@ -33,19 +32,16 @@ func Chat(letters ...string) {
 			if err != nil {
 				grpclog.Fatalf("Failed to receive a note : %v", err)
 			}
-			grpclog.Printf("Got message %s", in.Content)
+			grpclog.Printf("client -- server status: %s", in.Content)
 		}
 	}()
 
 	// send msg
 	for _, str := range letters {
-		grpclog.Printf("send msg: %v", str)
+		grpclog.Printf("client -- send msg: %v", str)
 		if err := stream.Send(&pb.Msg{Content: str}); err != nil {
 			grpclog.Fatalf("%v.Send(%v) = %v", stream, str, err)
 		}
-		sleep := 5
-		grpclog.Printf("sleep for %v seconds", sleep)
-		time.Sleep(time.Duration(sleep) * time.Second) //"sleep for 5 seconds"
 	}
 
 	// close send
