@@ -24,15 +24,17 @@ func input() {
 }
 
 func main() {
+	flag.Parse()
 	fmt.Println("start the program")
 	waitc := make(chan struct{})
-	client.InitChatClient(serverAddr)
 
 	// start the server thread
 	go func() {
 		server.InitChatServer()
 		close(waitc)
 	}()
+
+	client.InitChatClient(serverAddr)
 
 	// start the client thread
 	go func() {
