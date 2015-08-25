@@ -11,7 +11,10 @@ import (
 	"google.golang.org/grpc"
 )
 
-var client pb.ChatClient
+var (
+	client pb.ChatClient
+	conn   *grpc.ClientConn
+)
 
 func Chat(letters ...string) {
 	stream, err := client.Chat(context.Background())
@@ -49,11 +52,17 @@ func Chat(letters ...string) {
 	<-waitc
 }
 
+func Shutdown() {
+	grpclog.Println("client shutdown...")
+	conn.Close()
+}
+
 func InitChatClient(serverAddr *string) {
 	conn, err := grpc.Dial(*serverAddr)
 	if err != nil {
 		grpclog.Fatalf("fail to dial: %v", err)
 	}
+
 	// always turn off the conn when exit
 	defer conn.Close()
 

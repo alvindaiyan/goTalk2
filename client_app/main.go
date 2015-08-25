@@ -26,27 +26,32 @@ func input() {
 func main() {
 	flag.Parse()
 	fmt.Println("start the program")
-	waitc := make(chan struct{})
+	// start the app
+	for {
+		waitc := make(chan struct{}) // a wait lock
 
-	// start the server thread
-	go func() {
-		server.InitChatServer()
-		close(waitc)
-	}()
+		// start the server thread
+		go func() {
+			server.InitChatServer()
+			close(waitc)
+		}()
 
-	client.InitChatClient(serverAddr)
+		// start the client thread
+		client.InitChatClient(serverAddr)
 
-	// start the client thread
-	go func() {
-		for {
-			msg := <-msgc // a message to send
-			client.Chat(msg)
-		}
-		close(waitc)
-	}()
+		go func() {
+			for {
+				msg := <-msgc // a message to send
+				client.Chat(msg)
+			}
+			close(waitc) // unlock the main process and start over
+		}()
 
-	// start the input thread
-	go input()
-
-	<-waitc
+		// start the input thread
+		go input()
+		<-waitc
+		server.Shutdown()
+		client.Shutdown()
+		fmt.Println("restart the app")
+	}
 }

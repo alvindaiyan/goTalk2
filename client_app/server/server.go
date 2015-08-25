@@ -13,7 +13,8 @@ import (
 )
 
 var (
-	port = flag.Int("port", 10000, "The server port")
+	port       = flag.Int("port", 10000, "The server port")
+	grpcServer *grpc.Server
 )
 
 type chat_server struct {
@@ -38,6 +39,11 @@ func (*chat_server) Chat(stream pb.Chat_ChatServer) error {
 	}
 }
 
+func Shutdown() {
+	grpclog.Println("shutdown server")
+	grpcServer.Stop()
+}
+
 func InitChatServer() {
 	grpclog.Println("start server...")
 	flag.Parse()
@@ -45,8 +51,10 @@ func InitChatServer() {
 	if err != nil {
 		grpclog.Fatal("failed to listen: %v", err)
 	}
-	grpcServer := grpc.NewServer()
+
+	grpcServer = grpc.NewServer()
 	pb.RegisterChatServer(grpcServer, new(chat_server))
 	grpcServer.Serve(lis)
 	grpclog.Println("server shutdown...")
+
 }
