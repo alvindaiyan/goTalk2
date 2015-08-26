@@ -33,7 +33,11 @@ func (*chat_server) Chat(stream pb.Chat_ChatServer) error {
 			return err
 		}
 		content := in.Content
-		grpclog.Printf("server -- received message:\n%v", content)
+		title := in.Title
+		if title == "" {
+			title = "Unknown"
+		}
+		grpclog.Printf("server -- received message:\n%v: %v", title, content)
 		revMsg := "received"
 		stream.Send(&pb.Msg{Content: revMsg})
 	}

@@ -14,6 +14,7 @@ import (
 var (
 	client pb.ChatClient
 	conn   *grpc.ClientConn
+	title  string
 )
 
 func Chat(letters ...string) {
@@ -42,7 +43,7 @@ func Chat(letters ...string) {
 	// send msg
 	for _, str := range letters {
 		grpclog.Printf("client -- send msg: %v", str)
-		if err := stream.Send(&pb.Msg{Content: str}); err != nil {
+		if err := stream.Send(&pb.Msg{Content: str, Title: title}); err != nil {
 			grpclog.Fatalf("%v.Send(%v) = %v", stream, str, err)
 		}
 	}
@@ -57,8 +58,9 @@ func Shutdown() {
 	conn.Close()
 }
 
-func InitChatClient(serverAddr *string) {
+func InitChatClient(t string, serverAddr *string) {
 	conn, err := grpc.Dial(*serverAddr)
+	title = t
 	if err != nil {
 		grpclog.Fatalf("fail to dial: %v", err)
 	}

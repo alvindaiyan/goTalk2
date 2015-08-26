@@ -10,4 +10,5 @@ service Chat {
 // only support the string for now
 message Msg {
 	string content = 1;
+	string title = 2;
 }

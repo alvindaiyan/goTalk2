@@ -11,10 +11,13 @@ import (
 )
 
 var (
-	msgc       = make(chan string)
+	msgc = make(chan string) // the message channel
+
 	serverAddr = flag.String("server_addr", "127.0.0.1:10000", "The server address in the format of host:port")
+	myTitle    = flag.String("title", "", "The name show to your friend")
 )
 
+// an input from command line
 func input() {
 	for {
 		reader := bufio.NewReader(os.Stdin)
@@ -27,31 +30,33 @@ func main() {
 	flag.Parse()
 	fmt.Println("start the program")
 	// start the app
-	for {
-		waitc := make(chan struct{}) // a wait lock
+	waitc := make(chan struct{}) // a wait lock
 
-		// start the server thread
-		go func() {
+	// start the server thread
+	go func() {
+		for {
 			server.InitChatServer()
-			close(waitc)
-		}()
+		}
+		close(waitc)
+	}()
 
-		// start the client thread
-		client.InitChatClient(serverAddr)
+	// start the client thread
+	go func() {
+		client.InitChatClient(*myTitle, serverAddr)
+		for {
+			msg := <-msgc // a message to send
+			client.Chat(msg)
+		}
+		close(waitc) // unlock the main process and start over
+	}()
 
-		go func() {
-			for {
-				msg := <-msgc // a message to send
-				client.Chat(msg)
-			}
-			close(waitc) // unlock the main process and start over
-		}()
+	// start the input thread
+	go input()
 
-		// start the input thread
-		go input()
-		<-waitc
-		server.Shutdown()
-		client.Shutdown()
-		fmt.Println("restart the app")
-	}
+	<-waitc
+
+	// finished in this round restart the app
+	server.Shutdown()
+	client.Shutdown()
+	fmt.Println("restart the app")
 }

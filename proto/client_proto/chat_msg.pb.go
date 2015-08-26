@@ -26,6 +26,7 @@ var _ = proto.Marshal
 // only support the string for now
 type Msg struct {
 	Content string `protobuf:"bytes,1,opt,name=content" json:"content,omitempty"`
+	Title   string `protobuf:"bytes,2,opt,name=title" json:"title,omitempty"`
 }
 
 func (m *Msg) Reset()         { *m = Msg{} }
