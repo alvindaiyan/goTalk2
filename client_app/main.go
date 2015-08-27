@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"os"
 
+	"strings"
+
 	"github.com/goTalk2/client_app/client"
 	"github.com/goTalk2/client_app/server"
 )
@@ -29,34 +31,35 @@ func input() {
 func main() {
 	flag.Parse()
 	fmt.Println("start the program")
-	// start the app
-	waitc := make(chan struct{}) // a wait lock
+	for {
+		// start the app
+		waitc := make(chan struct{}) // a wait lock
 
-	// start the server thread
-	go func() {
-		for {
+		// start the server thread
+		go func() {
+			fmt.Println("start the server")
 			server.InitChatServer()
-		}
-		close(waitc)
-	}()
+			defer close(waitc)
+		}()
 
-	// start the client thread
-	go func() {
-		client.InitChatClient(*myTitle, serverAddr)
-		for {
-			msg := <-msgc // a message to send
-			client.Chat(msg)
-		}
-		close(waitc) // unlock the main process and start over
-	}()
+		// start the client thread
+		go func() {
+			for {
+				msg := <-msgc // a message to send
+				client.InitChatClient(*myTitle, serverAddr)
+				err := client.Chat(msg)
+				if err != nil {
+					// restart the client
+					fmt.Printf("send Err: %v", err)
+				}
+			}
+		}()
 
-	// start the input thread
-	go input()
+		// start the input thread
+		go input()
 
-	<-waitc
-
-	// finished in this round restart the app
-	server.Shutdown()
-	client.Shutdown()
-	fmt.Println("restart the app")
+		<-waitc
+		// finished in this round restart the app
+		fmt.Println("restart the app")
+	}
 }
