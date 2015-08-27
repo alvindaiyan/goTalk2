@@ -6,8 +6,6 @@ import (
 	"fmt"
 	"os"
 
-	"strings"
-
 	"github.com/goTalk2/client_app/client"
 	"github.com/goTalk2/client_app/server"
 )
