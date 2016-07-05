@@ -17,7 +17,7 @@ var (
 )
 
 func Chat(letters ...string) error {
-	// get connection
+	// get connection for chat
 	conn := connect(serverAddr)
 	defer conn.Close()
 	client := pb.NewChatClient(conn)
