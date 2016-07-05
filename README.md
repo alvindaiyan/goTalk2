@@ -1,5 +1,5 @@
-# goTalk2 
-[![Build Status](https://travis-ci.org/alvindaiyan/goTalk2.svg?branch=master)](https://travis-ci.org/alvindaiyan/goTalk2)
+# goTalk2 [![Build Status](https://travis-ci.org/alvindaiyan/goTalk2.svg?branch=master)](https://travis-ci.org/alvindaiyan/goTalk2)
+
 
 This is a simple p2p chat program using [grpc](http://www.grpc.io/).
 
