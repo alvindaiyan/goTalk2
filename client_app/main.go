@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/goTalk2/client_app/client"
-	"github.com/goTalk2/client_app/server"
+	"github.com/alvindaiyan/goTalk2/client_app/client"
+	"github.com/alvindaiyan/goTalk2/client_app/server"
 )
 
 var (

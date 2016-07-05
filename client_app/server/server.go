@@ -6,7 +6,7 @@ import (
 	"io"
 	"net"
 
-	pb "github.com/goTalk2/proto/client_proto"
+	pb "github.com/alvindaiyan/goTalk2/proto/client_proto"
 	"google.golang.org/grpc"
 
 	"google.golang.org/grpc/grpclog"
