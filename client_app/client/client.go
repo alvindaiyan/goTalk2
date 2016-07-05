@@ -73,12 +73,13 @@ func InitChatClient(t string, srvAddr *string) {
 }
 
 func connect(srvAddr *string) *grpc.ClientConn {
-	conn, err := grpc.Dial(*srvAddr)
+	conn, err := grpc.Dial(*srvAddr, grpc.WithInsecure())
 
 	if err != nil {
 		grpclog.Fatalf("fail to dial: %v", err)
 	}
 	grpclog.Println("client started...")
+
 	return conn
 
 }
