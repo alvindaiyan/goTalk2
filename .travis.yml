@@ -15,5 +15,6 @@ matrix:
     # NOTE: no tip, see https://github.com/travis-ci/gimme/issues/38
 
 
-script:
-  - ./install.sh
+install:
+# Install all external dependencies, ensuring they are updated.
+- go get -u -v $(go list -f '{{join .Imports "\n"}}' ./... | sort | uniq | grep -v goTalk)
