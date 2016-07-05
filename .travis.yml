@@ -1,5 +1,20 @@
 language: go
 
-go:
-  -1.6.2
-  -tip
+# Don't build other branches that are being used for PRs.
+# Currently only the master branch is used in this repo.
+branches:
+  only:
+    - master
+
+matrix:
+  include:
+    - go: 1.5.4
+    - go: 1.6.2
+      env: ALLOW_E2E=true # Don't run e2e tests more than once.
+    - go: 1.7beta2
+    # NOTE: no tip, see https://github.com/travis-ci/gimme/issues/38
+
+
+install:
+# Install all external dependencies, ensuring they are updated.
+- go get -u -v $(go list -f '{{join .Imports "\n"}}' ./... | sort | uniq | grep -v golang-samples)
