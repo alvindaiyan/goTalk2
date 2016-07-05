@@ -14,6 +14,9 @@ matrix:
     - go: 1.7beta2
     # NOTE: no tip, see https://github.com/travis-ci/gimme/issues/38
 
+before_install:
+  export GOPATH=$HOME/gopath/src/github.com/alvindaiyan/goTalk2
+
 
 install:
 # Install all external dependencies, ensuring they are updated.
