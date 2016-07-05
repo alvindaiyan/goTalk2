@@ -11,9 +11,9 @@ Go 1.6
 
 ### Dependencies
 Run followings before you build to get all the dependencies.
-```go get github.com/golang/protobuf/proto```
-```go get golang.org/x/net/context```
-```go get google.golang.org/grpc```
+- ```go get github.com/golang/protobuf/proto```
+- ```go get golang.org/x/net/context```
+- ```go get google.golang.org/grpc```
 
 
 ## To Start
